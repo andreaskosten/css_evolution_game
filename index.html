@@ -1,0 +1,751 @@
+<html>
+<head>
+    
+    <title>css evolution</title>
+    <link rel="shortcut icon" href="img/logo.png">
+    <meta http-equiv="Cache-Control" content="private"; charset="utf-8">
+    
+    <link rel="stylesheet" type="text/css" href="css/main.css?2020_07_27">
+    <link rel="stylesheet" type="text/css" href="css/fonts.css?2020_07_20">
+    <link rel="stylesheet" type="text/css" href="css/loader.css?2020_07_27">
+    <script type="text/javascript" src="jquery-3.5.0.min.js"></script>
+    
+    <style>
+    
+    </style>
+</head>
+
+
+<body>
+    <header id='pageHeader'>
+        <p class='texts_light' style='font-size: 1.8em; font-family: "font_bold"; margin-bottom: 5px'>CSS Evolution Game</p>
+        <p class='texts_light'>developed by <a class='link_common' href='https://andreaskostenko.space'>andreaskostenko</a></p>
+    </header>
+    
+    
+    <article id='mainBlock' style='margin-bottom: 100px'>
+        
+        <div id='div_global' style='margin: 20px 20px 100px 20px; width: 100%' align='center'>
+            
+            <div id='div_intro' style='margin: 20px 0px 30px 0px'>
+                
+                <span class='btn_simple btn_simple_available' id='btn_game_aim' onclick="$('#txt_game_aim').removeClass('hidden'); $(this).removeClass('btn_simple_available').addClass('btn_simple_activated');">в чём цель игры</span>
+                
+                <p id='txt_game_aim' class='hidden' style='width: 500px; text-align: left'>
+                    Нужно выбирать одну из предложенных кнопок, пытаясь путём отбора получить кнопку, максимально приближённую к образцу.<br><br>
+                    Она породит некоторое количество потомства, которое унаследует её внешность с некоторыми отклонениями.<br><br>
+                    Параметры отклонений можно задать в настройках.
+                </p>
+            </div>
+            
+            <div id='div_settings' style='margin-bottom: 30px'>
+                
+                <p class='font_bold' style='margin-bottom: 12px'>настройки</p>
+                
+                <table id='table_settings'>
+                    <tr>
+                        <td><p style='padding: 10px 0px 10px 0px; margin-right: 4px'>шанс мутации, %</p></td>
+                        <td><p id='txt_mutation_chance' style='font-size: 1.2em; color: #0984e3; font-family: "font_bold"'>50</p></td>
+                        <td><input class='input_sliders' type='range' id='input_mutation_chance' min='10' max='100' step='10' value='50'></td>
+                    </tr>
+                    <tr>
+                        <td><p style='padding: 4px 0px 4px 0px; margin-right: 4px'>модификатор силы мутации, ед.</p></td>
+                        <td><p id='txt_mutation_power' style='font-size: 1.2em; color: #0984e3; font-family: "font_bold"'>1</p></td>
+                        <td><input class='input_sliders' type='range' id='input_mutation_power' min='1' max='3' step='0.1' value='1'></td>
+                    </tr>
+                    <tr>
+                        <td><p style='padding: 0px 0px 0px 0px; margin-right: 4px'>шанс срабатывания<br>модификатора силы мутации, %</p></td>
+                        <td><p id='txt_mutation_power_applying_chance' style='font-size: 1.2em; color: #0984e3; font-family: "font_bold"'>100</p></td>
+                        <td><input class='input_sliders' type='range' id='input_mutation_power_applying_chance' min='10' max='100' step='10' value='100'></td>
+                    </tr>
+                </table>
+                
+                <div id='div_for_btns_sets' style='margin-top: 20px'>
+                    <span class='btn_simple btn_simple_activated btns_sets' id='btn_set_slow'>хочу медленную селекцию</span>
+                    <span class='btn_simple btn_simple_available btns_sets' id='btn_set_dynamic'>хочу динамичную селекцию</span>
+                </div>
+            </div>
+            
+            <div style='display: none'>
+                <p class='' id='var_generation'>0</p>
+            </div>
+            
+            <div id='div_btn_example_1' style='margin: 50px 0px 80px 0px' align='center'>
+            
+                <p class='font_bold' style='margin-bottom: 12px'>образец целевой кнопки</p>
+                <span class='ev_btn_ideal any_button'>button</span>
+            </div>
+            
+            <div style='margin: 20px 0px 0px 0px'>
+                
+                <span class='btn_simple btn_simple_available' id='btn_begin'>начать</span>
+            </div>
+            
+            <div id='spawner'></div>
+            
+            <div id='div_btn_example_2' class='hidden' style='margin-top: 32px' align='center'>
+            
+                <p class='font_bold' style='margin-bottom: 12px'>образец целевой кнопки</p>
+                <span class='ev_btn_ideal any_button'>button</span>
+            </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <!-- scroll buttons -->
+    <nav class='scrollers hidden' id='to_top'>
+        <div><img style='width: 16px' src='img/arrow_top.svg'></div>
+    </nav>
+    
+    <nav class='scrollers hidden' id='to_bottom'>
+        <div><img style='width: 16px' src='img/arrow_bottom.svg'></div>
+    </nav>
+    
+    
+    <footer id='pageFooter'>
+        <p class='texts_light'>Some icons on this page made by <a class='link_common' href='http://www.freepik.com/' title='Freepik'>Freepik</a> from <a class='link_common' href='https://www.flaticon.com/' title='Flaticon'>www.flaticon.com</a>.</p>
+        
+        <p class='texts_light' style='margin-top: 12px'>Если вы считаете, что на этой странице нарушаются ваши права, обратитесь <a class='link_common' href='https://www.facebook.com/andrkostenko'>сюда</a>.</p>
+    </footer>
+    
+    
+    <script>
+    
+    // when page is ready:
+    $(document).ready(function(){
+        
+        $('html, body').animate({ scrollTop: 0 }, 200);
+        
+        //$('#btn_begin').trigger('click');
+        //test_random_algorithm();
+    });
+    
+    
+    
+    // input - settings:
+        $('body').on('input', '#input_mutation_chance', function(event){
+            $('#txt_mutation_chance').text( $(this).val() );
+        });
+        
+        $('body').on('input', '#input_mutation_power', function(event){
+            $('#txt_mutation_power').text( $(this).val() );
+        });
+        
+        $('body').on('input', '#input_mutation_power_applying_chance', function(event){
+            $('#txt_mutation_power_applying_chance').text( $(this).val() );
+        });
+    
+    
+    
+    // click - set prepared templates for settings:
+    $('.btns_sets').click(function(){
+        
+        if( $(this).hasClass('btn_simple_available') ){
+            
+            let id = $(this).attr('id');
+            
+            if( id == 'btn_set_slow' ){
+                
+                $('#input_mutation_chance').val(50);
+                $('#txt_mutation_chance').text('50');
+                
+                $('#input_mutation_power').val(1);
+                $('#txt_mutation_power').text('1');
+                
+                $('#input_mutation_power_applying_chance').val(100);
+                $('#txt_mutation_power_applying_chance').text('100');
+            }
+            
+            if( id == 'btn_set_dynamic' ){
+                
+                $('#input_mutation_chance').val(50);
+                $('#txt_mutation_chance').text('50');
+                
+                $('#input_mutation_power').val(2.4);
+                $('#txt_mutation_power').text('2.4');
+                
+                $('#input_mutation_power_applying_chance').val(30);
+                $('#txt_mutation_power_applying_chance').text('30');
+            }
+            
+            $('.btns_sets').addClass('btn_simple_available').removeClass('btn_simple_activated');
+            $(this).addClass('btn_simple_activated').removeClass('btn_simple_available');
+        }
+    });
+    
+    
+    
+    // click - begin game:
+    $('#btn_begin').click(function(){
+        
+        begin_the_game();
+        
+        $(this).remove();
+    });
+    
+    
+    
+    // click - choose new parent:
+    $('body').on('click', '.possible_parent', function(event){
+        
+        if( $(this).hasClass('btn_clickable') ){
+            let key_part_id = $(this).attr('id');
+            key_part_id = key_part_id.replace(/btn_/g, '');
+                        //console.log('key_part_id = ' + key_part_id);
+            
+            // set backgrounds colors as indicators of choice:
+            $('.div_for_buttons[me_set=0]').addClass('backgr_ignored');
+            $('#div_for_buttons_' + key_part_id).addClass('backgr_choosed').removeClass('backgr_ignored');
+            $('.div_for_buttons').attr('me_set', '1');
+            
+            // for all existing possible parents:
+            $('.possible_parent').removeClass('btn_clickable');
+            
+            generate_children(true, $(this).attr('id'), 5);
+        }
+    });
+    
+    
+    
+    // function - begin the game:
+    function begin_the_game(){
+        
+        // disable settings inputs:
+        $('.input_sliders').prop('disabled', true);
+        $('#div_for_btns_sets').addClass('hidden');
+        
+        $('#pageFooter').remove();
+        
+        $('#div_btn_example_1').remove();
+        $('#div_btn_example_2').removeClass('hidden');
+        
+        // on the start, create random buttons (because there are not any parents):
+        generate_children(false, false, 3);
+    }
+    
+    
+    
+    // function - generate buttons:
+    function generate_children(parent_exists, parent_id, how_many){
+        
+        let generation = Number( $('#var_generation').text() ) + 1;
+        let new_buttons = '';
+        let current_button, new_button_id;
+        let array_for_buttons_id = [];
+        
+        // for every button:
+        for( i = 0; i < how_many; i++ ){
+            
+            // compose id for current button:
+            new_button_id = 'btn_' + generation + '_' + i;
+            
+            array_for_buttons_id[i] = new_button_id;
+            current_button = `<span class='any_button btn_clickable possible_parent possible_parent_`+generation+`' id='` + new_button_id + `'>button</span>`;
+            new_buttons += `<div class='div_for_buttons' id='div_for_buttons_`+generation+'_'+i+`' me_set='0'>` + current_button + `</div>`;
+        }
+        
+        let text = `<p class='text_title'>поколение № ` + generation + `</p>`;
+        
+        // put new buttons in HTML:
+        new_buttons = text + `<div class='div_for_generation' id='div_for_generation_` + generation + `'>` + new_buttons + `</div>`;
+        $('#spawner').before(new_buttons);
+        
+        let id, padding_top_bottom, padding_left_right;
+        
+        if( !parent_exists ){
+            
+            // for every button:
+            for( i = 0; i < how_many; i++ ){
+                
+                // it will make code clean:
+                id = array_for_buttons_id[i];
+                
+                // generate and set random css styles for this button:
+                $('#' + id).css('border-radius', get_random_css_value('border-radius'));
+                $('#' + id).css('border-width', get_random_css_value('border-width'));
+                //$('#' + id).css('border-style', get_random_css_value('border-style'));
+                $('#' + id).css('border-color', get_random_css_value('border-color'));
+                
+                $('#' + id).css('color', get_random_css_value('color'));
+                $('#' + id).css('font-size', get_random_css_value('font-size'));
+                //$('#' + id).css('font-family', get_random_css_value('font-family'));
+                
+                $('#' + id).css('background-color', get_random_css_value('background-color'));
+                
+                padding_top_bottom = get_random_css_value('padding_top_bottom');
+                $('#' + id).css('padding-top', padding_top_bottom);
+                $('#' + id).css('padding-bottom', padding_top_bottom);
+                
+                padding_left_right = get_random_css_value('padding_left_right');
+                $('#' + id).css('padding-left', padding_left_right);
+                $('#' + id).css('padding-right', padding_left_right);
+            }
+        }
+        else{
+            
+            //console.log('parent_id = ' + parent_id);
+            
+            // read user option for mutation chance and mutation power:
+            let mutation_chance = Number( $('#txt_mutation_chance').text() ) / 10;
+            let mutation_power = Number( $('#txt_mutation_power').text() );
+            
+            // read user option for "non-basic mutation power applying chance" and instantly use it:
+            let mutation_power_applying_chance = Number( $('#txt_mutation_power_applying_chance').text() );
+            let rnd_100 = get_random_int(1, 100);
+            if( rnd_100 > mutation_power_applying_chance ){
+                
+                // mutation power must be basic:
+                mutation_power = 1;
+            }
+            
+            // for every button:
+            for( i = 0; i < how_many; i++ ){
+                
+                //console.warn('begin iter #' + i + ' for mutating next child');
+                
+                // it will make code clean:
+                id = array_for_buttons_id[i];
+                
+                // mutate (or not) and set random css styles for this button:
+                $('#' + id).css('border-radius', mutate_or_not_mutate('border-radius', parent_id, mutation_chance, mutation_power));
+                $('#' + id).css('border-width', mutate_or_not_mutate('border-width', parent_id, mutation_chance, mutation_power));
+                //$('#' + id).css('border-style', mutate_or_not_mutate('border-style', parent_id, mutation_chance, mutation_power));
+                $('#' + id).css('border-color', mutate_or_not_mutate('border-color', parent_id, mutation_chance, mutation_power));
+                
+                $('#' + id).css('color', mutate_or_not_mutate('color', parent_id, mutation_chance, mutation_power));
+                $('#' + id).css('font-size', mutate_or_not_mutate('font-size', parent_id, mutation_chance, mutation_power));
+                //$('#' + id).css('font-family', mutate_or_not_mutate('font-family', parent_id, mutation_chance, mutation_power));
+                
+                $('#' + id).css('background-color', mutate_or_not_mutate('background-color', parent_id, mutation_chance, mutation_power));
+                
+                padding_top_bottom = mutate_or_not_mutate('padding_top_bottom', parent_id, mutation_chance, mutation_power);
+                $('#' + id).css('padding-top', padding_top_bottom);
+                $('#' + id).css('padding-bottom', padding_top_bottom);
+                
+                padding_left_right = mutate_or_not_mutate('padding_left_right', parent_id, mutation_chance, mutation_power);
+                $('#' + id).css('padding-left', padding_left_right);
+                $('#' + id).css('padding-right', padding_left_right);
+            }
+        }
+        
+        
+        // finally, show container with new buttons:
+        $('#div_for_generation_'+generation).css('display', 'flex');
+        $('#var_generation').text(generation);
+        
+        if( generation > 4 ){
+            $('html, body').animate({ scrollTop: $('body')[0].scrollHeight }, 400);
+        }
+        
+        if( generation == 5 ){
+            $('.scrollers').removeClass('hidden');
+        }
+    }
+    
+    
+    
+    // function - organize (or not) mutations:
+    function mutate_or_not_mutate(style_name, parent_id, mutation_chance, mutation_power){
+        
+        // to mutate or not to mutate:
+            let to_mutate = false;
+            let mutation_rnd = get_random_int(1, 10);
+                        //console.log('mutation_rnd = ' + mutation_rnd);
+            if( mutation_rnd <= mutation_chance ){
+                to_mutate = true;
+            }
+            else{
+                to_mutate = false;
+            }
+        
+        
+        switch(style_name) {
+            
+            case 'border-radius':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('border-radius');
+                    parent_style = Number( parent_style.replace(/\%/, '') );
+                    
+                    let result = several_steps_in_scope(parent_style, 0, 50, 1, 4, mutation_power);
+                                //console.log('result of border-radius mutating = ' + result);
+                    return result+'%';
+                }
+                else{ return $('#'+parent_id).css('border-radius'); }
+            
+            
+            case 'border-width':
+                if(to_mutate){
+                    
+                    return one_step_in_array('border-width', $('#'+parent_id).css('border-width'));
+                }else{ return $('#'+parent_id).css('border-width'); }
+            
+            
+            case 'border-style':
+                if(to_mutate){
+                    
+                    return one_step_in_array('border-style', $('#'+parent_id).css('border-style'));
+                }else{ return $('#'+parent_id).css('border-style'); }
+            
+            
+            case 'border-color':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('border-color');
+                                //console.log('for BORDER-COLOR parent_style = ' + parent_style);
+                    parent_style = parent_style.replace(/rgb\(/, '');
+                    parent_style = parent_style.replace(/\)/, '');
+                                //console.log('and cleaned parent_style = ' + parent_style);
+                    
+                    let parent_colors = parent_style.split(', ');
+                    
+                    let new_R = several_steps_in_scope(Number(parent_colors[0]), 0, 255, 10, 20, mutation_power);
+                    let new_G = several_steps_in_scope(Number(parent_colors[1]), 0, 255, 10, 20, mutation_power);
+                    let new_B = several_steps_in_scope(Number(parent_colors[2]), 0, 255, 10, 20, mutation_power);
+                    
+                    let result = 'rgb(' + new_R + ', ' + new_G + ', ' + new_B + ')';
+                    return result;
+                }
+                else{ return $('#'+parent_id).css('border-color'); }
+            
+            
+            case 'color':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('color');
+                                //console.log('for TEXT-COLOR parent_style = ' + parent_style);
+                    parent_style = parent_style.replace(/rgb\(/, '');
+                    parent_style = parent_style.replace(/\)/, '');
+                                //console.log('and cleaned parent_style = ' + parent_style);
+                    
+                    let parent_colors = parent_style.split(', ');
+                    
+                    let new_R = several_steps_in_scope(Number(parent_colors[0]), 0, 255, 10, 20, mutation_power);
+                    let new_G = several_steps_in_scope(Number(parent_colors[1]), 0, 255, 10, 20, mutation_power);
+                    let new_B = several_steps_in_scope(Number(parent_colors[2]), 0, 255, 10, 20, mutation_power);
+                    
+                    let result = 'rgb(' + new_R + ', ' + new_G + ', ' + new_B + ')'; 
+                                //console.log('and result = ' + result);
+                    return result;
+                }
+                else{ return $('#'+parent_id).css('color'); }
+            
+            
+            case 'font-size':
+                if(to_mutate){
+                    return one_step_in_array('font-size', $('#'+parent_id).css('font-size'));
+                }else{ return $('#'+parent_id).css('font-size'); }
+            
+            
+            case 'font-family':
+                return $('#'+parent_id).css('font-family');
+            
+            
+            case 'background-color':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('background-color');
+                                //console.log('for BACKGR-COLOR parent_style = ' + parent_style);
+                    parent_style = parent_style.replace(/rgb\(/, '');
+                    parent_style = parent_style.replace(/\)/, '');
+                                //console.log('and cleaned parent_style = ' + parent_style);
+                    
+                    let parent_colors = parent_style.split(', ');
+                    
+                    let new_R = several_steps_in_scope(Number(parent_colors[0]), 0, 255, 10, 20, mutation_power);
+                    let new_G = several_steps_in_scope(Number(parent_colors[1]), 0, 255, 10, 20, mutation_power);
+                    let new_B = several_steps_in_scope(Number(parent_colors[2]), 0, 255, 10, 20, mutation_power);
+                    
+                    let result = 'rgb(' + new_R + ', ' + new_G + ', ' + new_B + ')';
+                    return result;
+                }
+                else{ return $('#'+parent_id).css('background-color'); }
+            
+            
+            case 'padding_top_bottom':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('padding-top');
+                    parent_style = Number( parent_style.replace(/px/, '') );
+                    
+                    let result = several_steps_in_scope(parent_style, 4, 24, 2, 4, mutation_power);
+                                //console.log('result of padding_top_bottom mutating = ' + result);
+                    return result+'px';
+                }
+                else{ return $('#'+parent_id).css('padding-top'); }
+            
+            
+            case 'padding_left_right':
+                if(to_mutate){
+                    
+                    let parent_style = $('#'+parent_id).css('padding-left');
+                    parent_style = Number( parent_style.replace(/px/, '') );
+                    
+                    let result = several_steps_in_scope(parent_style, 4, 24, 2, 4, mutation_power);
+                                //console.log('result of padding_left_right mutating = ' + result);
+                    return result+'px';
+                }
+                else{ return $('#'+parent_id).css('padding-left'); }
+        }
+    }
+    
+    
+    
+    // function - get value in respective scope, which is close to parent value:
+    function several_steps_in_scope(parent_value, min_value, max_value, min_offset, max_offset, mutation_power){
+        
+        // choose direction, which won't lead us out of the scope:
+        let direction;
+        if( parent_value == min_value ){ direction = 1; }
+        else if( parent_value == max_value ){ direction = 0; }
+        else{ direction = get_random_int(0, 1); }
+        
+        // calculate "force" of mutation:
+        let force_of_mutation = Math.floor(get_random_int(min_offset, max_offset) * mutation_power);
+        
+        // "direction is 0" means that we have to move to the left of the scope of possible values (by subtraction):
+        if( direction == 0 ){ force_of_mutation = 0 - Number(force_of_mutation); }
+        
+        let result = parent_value + force_of_mutation;
+        
+        // finally, fix result if it's out of the scope:
+        if( result > max_value ){ result = max_value; }
+        if( result < min_value ){ result = min_value; }
+        
+        return result;
+    }
+    
+    
+    
+    // function - get random value for css-parameter:
+    function get_random_css_value(style_name){
+        
+        switch(style_name) {
+            
+            case 'border-radius':
+                return get_random_int(0, 50)+'%';
+            
+            case 'border-width':
+                var array = get_array_with_possible_values('border-width');
+                break;
+                
+            case 'border-style':
+                var array = get_array_with_possible_values('border-style');
+                break;
+                
+            case 'border-color':
+                return get_random_color(true);
+            
+            case 'color':
+                return get_random_color(false);
+            
+            case 'font-size':
+                var array = get_array_with_possible_values('font-size');
+                break;
+                
+            case 'font-family':
+                var array = ['font_normal', 'Times New Roman', 'Arial'];
+                break;
+                
+            case 'background-color':
+                return get_random_color(true);
+                
+            case 'padding_top_bottom':
+                return get_random_int(4, 24)+'px';
+                
+            case 'padding_left_right':
+                return get_random_int(4, 24)+'px';
+        
+        }
+        
+        return array[choose_random_in_array(array)];
+    }
+    
+    
+    
+    // function - get value in respective array, which is adjacent to parent value:
+    function one_step_in_array(array_name, parent_value_in_array){
+        
+        // get this array:
+        let array = get_array_with_possible_values(array_name);
+        
+        // detect index of "parent_value_in_array":
+        let current_index = 0;
+        for( k = 0; k < array.length; k++ ){
+            
+                //console.warn('is ' + array[k] + ' = ' + parent_value_in_array + '?');
+            
+            if( array[k] == parent_value_in_array ){
+                current_index = k;
+            }
+        }
+                    //console.log('in array "' + array_name + '" for value "' + parent_value_in_array + '" current_index = ' + current_index);
+        
+        // choose direction, which won't lead us out of array:
+        let direction;
+        if( current_index == 0 ){ direction = 1; }
+        else if( current_index == array.length - 1 ){ direction = 0; }
+        else{ direction = get_random_int(0, 1); }
+                    //console.log('and direction = ' + direction);
+        
+        // calculate "force" of mutation:
+        let force_of_mutation = 1;
+        
+        // "direction is 0" means that we have to move to the left of the scope of possible values (by subtraction):
+        if( direction == 0 ){ force_of_mutation = 0 - force_of_mutation; }
+        
+        let result_index = current_index + force_of_mutation;
+        
+                    //console.log('result_index = ' + result_index);
+        return array[result_index];
+        
+    }
+    
+    
+    
+    // function - get array with possible values of CSS-style:
+    function get_array_with_possible_values(array_name){
+        
+        switch(array_name){
+            
+            case 'border-width':
+                var array = ['0px', '1px', '2px', '3px', '4px', '5px'];
+                return array;
+                
+            case 'border-style':
+                var array = ['solid', 'dashed', 'dotted'];
+                return array;
+                
+            case 'font-size':
+                var array = ['10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px', '21px'];
+                return array;
+        }
+    }
+    
+    
+    
+    // function - get random element from array:
+    function choose_random_in_array(array){
+        
+        try {
+            return items[Math.floor(Math.random() * array.length)];
+        }
+        catch {
+            return 'error';
+        }
+    }
+    
+    
+    
+    // function - get random color (if arg "color_must_be_not_red" is true, function will return color which is not "red"):
+    function get_random_color(color_must_be_not_red){
+        
+        let R, G, B, delta_GB;
+        let color_is_red = color_must_be_not_red;
+        
+        do {
+            
+            R = get_random_color_component();
+            G = get_random_color_component();
+            B = get_random_color_component();
+        
+            delta_GB = Math.abs(G - B);
+        
+            // check if created components make color "red":
+            if( R > 100 & R > G && R > B && G < 100 && B < 100 && delta_GB < 60 ){
+                
+                color_is_red = true;
+                console.log('oops, this color is "red": ' + R + ', ' + G + ', ' + B);
+            }
+            else{
+                color_is_red = false;
+            }
+            
+        } while( color_is_red );
+        
+        return 'rgb('+R+', '+G+', '+B+')';
+    }
+    
+    
+    
+    // function get random component for creating color (0 - 255):
+    function get_random_color_component(){
+        
+        return Math.floor(Math.random() * Math.floor(256));
+    }
+    
+    
+    
+    // function - get random integer from scope, including its edges:
+    function get_random_int(min, max){
+        
+        return Math.floor(Math.random() * (max + 1 - min)) + min;
+    }
+    
+    
+    
+    // ----------------------------------------------------------------------------
+    
+    // function - test algorithm, which is used for get random elements from arrays:
+    function test_random_algorithm(){
+        let items = ['a', 'e', 'i', 'o', 'u'];
+        let objResults = {};
+        let randomElement;
+        
+        for(i = 0; i < 1000000; i++){
+            randomElement = items[Math.floor(Math.random() * items.length)];
+            //randomElement = Math.floor(Math.random() * (10 + 1 - 1)) + 1;
+            if( objResults[randomElement] ){
+                objResults[randomElement]++;
+            }
+            else{
+                objResults[randomElement] = 1;
+            }
+        }
+        
+        console.log('objResults:');
+        console.log(objResults);
+    }
+    
+    
+    // function - block button:
+    function block_button(btn_id){
+        
+        $('#'+btn_id).removeClass('btn_available');
+        $('#'+btn_id).addClass('btn_simple_blocked').removeClass('btn_simple_available');
+    }
+    
+    
+    // function - unblock button:
+    function unblock_button(btn_id){
+        
+        $('#'+btn_id).addClass('btn_available');
+        $('#'+btn_id).addClass('btn_simple_available').removeClass('btn_simple_blocked');
+    }
+    
+    
+    // click - scroll to top:
+    $('#to_top').click(function(){
+        $('html, body').animate({ scrollTop: 0 }, 200);
+    });
+    
+    
+    // click - scroll to bottom:
+    $('#to_bottom').click(function(){
+        $('html, body').animate({ scrollTop: $('body')[0].scrollHeight }, 200);
+    });
+    
+    
+    // click - link opened:
+    $('body').on('click', '.link_common', function(event){
+        event.preventDefault();
+        window.open($(this).attr('href'), '_blank');
+    });
+    
+    </script>
+    
+</body>
+
+</html>
