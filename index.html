@@ -1,14 +1,14 @@
 <html>
 <head>
     
-    <title>css evolution</title>
+    <title>css evolution game</title>
     <link rel="shortcut icon" href="img/logo.png">
     <meta http-equiv="Cache-Control" content="private"; charset="utf-8">
     
-    <link rel="stylesheet" type="text/css" href="css/main.css?2020_07_27">
-    <link rel="stylesheet" type="text/css" href="css/fonts.css?2020_07_20">
-    <link rel="stylesheet" type="text/css" href="css/loader.css?2020_07_27">
-    <script type="text/javascript" src="jquery-3.5.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css?2020_02_08">
+    <link rel="stylesheet" type="text/css" href="css/fonts.css?2020_02_08">
+    <script type="text/javascript" src="js/jquery-3.5.0.min.js"></script>
+    <script type="text/javascript" src="js/m.js"></script>
     
     <style>
     
@@ -17,6 +17,7 @@
 
 
 <body>
+
     <header id='pageHeader'>
         <p class='texts_light' style='font-size: 1.8em; font-family: "font_bold"; margin-bottom: 5px'>CSS Evolution Game</p>
         <p class='texts_light'>developed by <a class='link_common' href='https://andreaskostenko.space'>andreaskostenko</a></p>
@@ -172,6 +173,8 @@
             
             $('.btns_sets').addClass('btn_simple_available').removeClass('btn_simple_activated');
             $(this).addClass('btn_simple_activated').removeClass('btn_simple_available');
+            
+            btns_sett(id);
         }
     });
     
@@ -223,6 +226,9 @@
         
         // on the start, create random buttons (because there are not any parents):
         generate_children(false, false, 3);
+        
+        // stats:
+        stats_new_game();
     }
     
     
@@ -285,6 +291,9 @@
         }
         else{
             
+            // stats:
+            stats_new_step(generation);
+            
             //console.log('parent_id = ' + parent_id);
             
             // read user option for mutation chance and mutation power:
@@ -335,12 +344,8 @@
         $('#div_for_generation_'+generation).css('display', 'flex');
         $('#var_generation').text(generation);
         
-        if( generation > 4 ){
+        if( generation > 3 ){
             $('html, body').animate({ scrollTop: $('body')[0].scrollHeight }, 400);
-        }
-        
-        if( generation == 5 ){
-            $('.scrollers').removeClass('hidden');
         }
     }
     
